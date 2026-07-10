@@ -861,6 +861,20 @@
             opacity: 0.7;
         }
 
+        .gallery-card.img-failed {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .gallery-card.img-failed::after {
+            content: '\f030';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            font-size: 1.8rem;
+            color: var(--text-soft);
+            opacity: 0.5;
+        }
         .gallery-card img {
             width: 100%;
             height: 100%;
@@ -1301,17 +1315,46 @@
             font-size: 0.95rem;
         }
         .contact-map {
+            position: relative;
             border-radius: 18px;
             overflow: hidden;
             border: 1px solid var(--theme-border);
             height: 260px;
             background: var(--secondary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
             color: var(--text-soft);
             font-weight: 300;
         }
+        .contact-map iframe {
+            filter: grayscale(0.15) contrast(1.05);
+        }
+        .map-open-btn {
+            position: absolute;
+            bottom: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 18px;
+            border-radius: 999px;
+            background: rgba(var(--theme-bg-rgb), 0.92);
+            border: 1px solid var(--theme-border);
+            color: var(--text);
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(6px);
+            transition: transform 0.25s ease, background 0.25s ease;
+            white-space: nowrap;
+        }
+        .map-open-btn i { color: var(--accent); }
+        .map-open-btn:hover {
+            transform: translateX(-50%) translateY(-3px);
+            background: var(--accent);
+            color: #0F0F0F;
+        }
+        .map-open-btn:hover i { color: #0F0F0F; }
 
         /* ============================================================
                    FOOTER
@@ -2637,8 +2680,8 @@
                         <div class="stat-item"><div class="num" data-count="8">0</div><div class="label">حلاقين محترفين</div></div>
                     </div>
                 </div>
-                <div class="about-image">
-                    <div class="placeholder">
+                <div class="about-image" id="aboutImageBox">
+                    <div class="placeholder" id="aboutImagePlaceholder">
                         <i class="fas fa-cut" style="font-size:2.8rem;display:block;margin-bottom:10px;color:var(--accent);"></i>
                         صورة الصالون
                     </div>
@@ -2665,12 +2708,12 @@
                         <a href="https://instagram.com" target="_blank" class="btn-outline" style="padding:8px 20px;font-size:0.8rem;"><i class="fab fa-instagram"></i> انستغرام</a>
                     </div>
                 </div>
-                <a href="#" target="_blank" id="contactMapLink" class="contact-map" style="text-decoration:none;">
-                    <div style="text-align:center;">
-                        <i class="fas fa-map" style="font-size:2.2rem;color:var(--accent);margin-bottom:10px;display:block;"></i>
-                        <span>📍 الموقع على خرائط جوجل</span>
-                    </div>
-                </a>
+                <div class="contact-map" id="contactMapBox">
+                    <iframe id="contactMapFrame" title="الموقع على الخريطة" style="width:100%;height:100%;border:0;" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    <a href="#" target="_blank" id="contactMapLink" class="map-open-btn">
+                        <i class="fas fa-location-arrow"></i> فتح في خرائط جوجل
+                    </a>
+                </div>
             </div>
         </div>
     </section>
@@ -2719,7 +2762,22 @@
         // spun forever. Registering it here, before any await, fixes
         // that race condition.)
         // ============================================================
+        // NOTE: hideLoaderAndReveal() is now called explicitly at the
+        // very end of this script, AFTER the client's real data has
+        // been fetched and every section (name, gallery, map, services,
+        // barbers, reviews) has been populated with it. Previously the
+        // loader was hidden as soon as the page's 'load' event fired —
+        // which happens almost instantly for a static page — long
+        // before the async data fetch (and the visitor-currency lookup,
+        // which alone can take up to ~5s) finished. That's what caused
+        // the default demo name/text to flash on screen for a moment
+        // before switching to the real client's info. Now the loader
+        // stays up the whole time, so the visitor only ever sees the
+        // final, correct content.
+        let loaderHidden = false;
         function hideLoaderAndReveal() {
+            if (loaderHidden) return;
+            loaderHidden = true;
             const loaderEl = document.getElementById('loader');
             if (loaderEl) loaderEl.classList.add('hidden');
             document.querySelectorAll('.section-reveal').forEach(el => {
@@ -2728,27 +2786,48 @@
                 }
             });
         }
-        if (document.readyState === 'complete') {
-            hideLoaderAndReveal();
-        } else {
-            window.addEventListener('load', hideLoaderAndReveal);
-        }
         // Absolute safety net: never let the loader hang for more than
-        // 4s even if something above unexpectedly stalls or throws.
-        setTimeout(hideLoaderAndReveal, 4000);
+        // 8s even if the network is offline or something above stalls.
+        setTimeout(hideLoaderAndReveal, 8000);
+
+        // ============================================================
+        // FETCH WITH TIMEOUT — defined early so the main data load
+        // below never hangs indefinitely (e.g. slow/offline network),
+        // which previously let the loader disappear while the page
+        // was still stuck showing default demo content.
+        // ============================================================
+        function fetchWithTimeout(url, ms) {
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), ms);
+            return fetch(url, { cache: 'no-store', signal: controller.signal }).finally(() => clearTimeout(timer));
+        }
 
         // ============================================================
         // MULTI-TENANT DATA LOADING
-        // URL pattern:  mysite.com/?id=dubai
-        // Real file lives at:  data/dubai.json   (just drop it flat in /data)
         //
-        // Optional override: mysite.com/?file=some-other-name.json
-        // loads data/some-other-name.json directly, ignoring id.
+        // Two supported URL formats:
+        //
+        //   1) mysite.com/?id=dubai
+        //      -> loads data/dubai.json directly (one file per client,
+        //         already in the site's own format).
+        //
+        //   2) mysite.com/?id=3&file=data.json
+        //      -> loads data/data.json ("file" can be named anything,
+        //         as long as it's a JSON file living in /data), then,
+        //         if that file is an ARRAY of leads (raw scraper
+        //         output), picks entry #3 from it using "id" as the
+        //         array index. "id" can also be a partial business
+        //         name instead of a number.
+        //
+        // This lets one data.json hold every scraped lead for a whole
+        // country/city, and "id" just selects which business to show.
         // ============================================================
         let SITE_DATA = {};
         const urlParams = new URLSearchParams(location.search);
         const siteId = urlParams.get('id');
         const siteFileOverride = urlParams.get('file');
+        // "biz" kept as a legacy alias for "id" when selecting inside an array
+        const bizSelector = siteId !== null ? siteId : urlParams.get('biz');
 
         let dataPath = null;
         if (siteFileOverride) {
@@ -2761,7 +2840,7 @@
 
         if (dataPath) {
             try {
-                const res = await fetch(dataPath, { cache: 'no-store' });
+                const res = await fetchWithTimeout(dataPath, 6000);
                 if (res.ok) SITE_DATA = await res.json();
             } catch (e) {
                 console.warn('Could not load client data.json, showing default demo content.', e);
@@ -2803,15 +2882,28 @@
             } catch (e) { return []; }
         }
 
+        function cleanAddress(raw) {
+            if (!raw) return '';
+            // Scraper output often carries a leading "Adresse:" (French)
+            // label from Google Maps' localized UI — strip it so it
+            // doesn't look out of place on an Arabic site.
+            return String(raw).replace(/^\s*adresse\s*:\s*/i, '').replace(/^\s*address\s*:\s*/i, '').trim();
+        }
+
         function normalizeRawLead(entry) {
             const phoneDigits = String(entry.phone || '').replace(/[^0-9]/g, '');
             const countryKey = String(entry.country || '').trim().toLowerCase();
+            const lat = entry.lat ?? entry.latitude ?? (entry.geo && entry.geo.lat);
+            const lng = entry.lng ?? entry.longitude ?? entry.lon ?? (entry.geo && entry.geo.lng);
             return {
                 businessName: entry.name || '',
                 currency: RAW_COUNTRY_NAME_TO_CURRENCY[countryKey] || 'SAR',
                 whatsapp: phoneDigits,
                 phoneDisplay: phoneDigits ? `+${phoneDigits}` : '',
-                address: entry.address || '',
+                address: cleanAddress(entry.address),
+                lat: (lat !== undefined && lat !== null && lat !== '') ? Number(lat) : null,
+                lng: (lng !== undefined && lng !== null && lng !== '') ? Number(lng) : null,
+                mapsUrl: entry.mapsUrl || entry.map_url || entry.google_maps_url || null,
                 hours: 'يومياً 10:00 ص – 12:00 ص',
                 gallery: extractGalleryFromDemoUrl(entry.demo_url),
             };
@@ -2823,14 +2915,13 @@
         }
 
         if (Array.isArray(SITE_DATA)) {
-            const bizParam = urlParams.get('biz');
             let chosen = SITE_DATA[0] || {};
-            if (bizParam) {
-                const asIndex = parseInt(bizParam, 10);
+            if (bizSelector !== null && bizSelector !== undefined && bizSelector !== '') {
+                const asIndex = parseInt(bizSelector, 10);
                 if (!Number.isNaN(asIndex) && SITE_DATA[asIndex]) {
                     chosen = SITE_DATA[asIndex];
                 } else {
-                    const needle = bizParam.toLowerCase();
+                    const needle = String(bizSelector).toLowerCase();
                     const match = SITE_DATA.find(b => String(b.name || '').toLowerCase().includes(needle));
                     if (match) chosen = match;
                 }
@@ -2865,12 +2956,6 @@
             FR: 'EUR', DE: 'EUR', ES: 'EUR', IT: 'EUR', NL: 'EUR',
             BE: 'EUR', PT: 'EUR', IE: 'EUR', AT: 'EUR',
         };
-
-        function fetchWithTimeout(url, ms) {
-            const controller = new AbortController();
-            const timer = setTimeout(() => controller.abort(), ms);
-            return fetch(url, { cache: 'no-store', signal: controller.signal }).finally(() => clearTimeout(timer));
-        }
 
         async function detectVisitorCurrency(fallbackCode) {
             // Note: when this page is opened directly as a local file
@@ -2916,7 +3001,17 @@
         const visitorCurrency = await detectVisitorCurrency(baseCurrency);
         const whatsappNumber = String(SITE_DATA.whatsapp || '966500000000').replace(/[^0-9]/g, '');
         const addressText = SITE_DATA.address || 'الرياض، المملكة العربية السعودية';
-        const mapsUrl = SITE_DATA.mapsUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(addressText)}`;
+        const hasCoords = typeof SITE_DATA.lat === 'number' && typeof SITE_DATA.lng === 'number'
+            && !Number.isNaN(SITE_DATA.lat) && !Number.isNaN(SITE_DATA.lng);
+        // The "open in app" link — exact pin if we have coordinates, otherwise a text search for the address.
+        const mapsUrl = SITE_DATA.mapsUrl || (hasCoords
+            ? `https://www.google.com/maps/search/?api=1&query=${SITE_DATA.lat},${SITE_DATA.lng}`
+            : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(addressText)}`);
+        // The embeddable, no-API-key map used inside the contact "box" so it
+        // renders a real live map instead of a static icon.
+        const mapsEmbedUrl = hasCoords
+            ? `https://www.google.com/maps?q=${SITE_DATA.lat},${SITE_DATA.lng}&z=16&output=embed`
+            : `https://www.google.com/maps?q=${encodeURIComponent(addressText)}&z=15&output=embed`;
         const phoneDisplay = SITE_DATA.phoneDisplay || '+966 50 000 0000';
         const hoursText = SITE_DATA.hours || 'يومياً 10:00 ص – 12:00 ص';
         const instagramHandle = SITE_DATA.instagram || '@diwan_barber';
@@ -3009,10 +3104,29 @@
         const testiSubEl = document.getElementById('testiSub');
         if (testiSubEl) testiSubEl.textContent = `ما يقوله عملاؤنا عن تجربتهم في ${businessName}`;
 
+        // Use the first real gallery photo as the "about" section image
+        // (instead of the static "صورة الصالون" placeholder) whenever
+        // we actually have client photos to show.
+        if (galleryImages.length) {
+            const aboutBox = document.getElementById('aboutImageBox');
+            if (aboutBox) {
+                const aboutImg = document.createElement('img');
+                aboutImg.src = galleryImages[0];
+                aboutImg.alt = businessName;
+                aboutImg.loading = 'lazy';
+                aboutImg.referrerPolicy = 'no-referrer';
+                aboutImg.style.cssText = 'width:100%;height:100%;object-fit:cover;';
+                aboutImg.onerror = () => { aboutImg.remove(); };
+                aboutBox.appendChild(aboutImg);
+            }
+        }
+
         const contactAddressEl = document.getElementById('contactAddress');
         if (contactAddressEl) { contactAddressEl.textContent = addressText; contactAddressEl.href = mapsUrl; }
         const contactMapLinkEl = document.getElementById('contactMapLink');
         if (contactMapLinkEl) contactMapLinkEl.href = mapsUrl;
+        const contactMapFrameEl = document.getElementById('contactMapFrame');
+        if (contactMapFrameEl) contactMapFrameEl.src = mapsEmbedUrl;
         const contactPhoneEl = document.getElementById('contactPhone');
         if (contactPhoneEl) contactPhoneEl.textContent = phoneDisplay;
         const contactHoursEl = document.getElementById('contactHours');
@@ -3166,7 +3280,7 @@
                     card.className = 'gallery-card';
                     card.dataset.src = src;
                     card.innerHTML = `
-                            <img src="${src}" alt="${businessName}" loading="lazy" />
+                            <img src="${src}" alt="${businessName}" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.gallery-card').classList.add('img-failed'); this.remove();" />
                             <div class="card-overlay">
                                 <span>✦ ${businessName}</span>
                                 <i class="fas fa-expand"></i>
@@ -3206,7 +3320,7 @@
             [track1, track2].forEach((track) => {
                 track.addEventListener('click', (e) => {
                     const card = e.target.closest('.gallery-card');
-                    if (card && card.dataset.src) openLightbox(card.dataset.src);
+                    if (card && card.dataset.src && !card.classList.contains('img-failed')) openLightbox(card.dataset.src);
                 });
             });
         }
@@ -3309,8 +3423,16 @@
                 else track2.appendChild(el.cloneNode(true));
             });
 
-            track1.appendChild(track1.cloneNode(true));
-            track2.appendChild(track2.cloneNode(true));
+            // Flat duplication (same fix applied to the gallery above) —
+            // nesting a track inside itself breaks the 50% marquee loop
+            // math and leaves a visible empty gap/jump once the CSS
+            // animation reaches the wrapped portion.
+            function duplicateFlatTesti(track) {
+                const originalCards = Array.from(track.children);
+                originalCards.forEach((card) => track.appendChild(card.cloneNode(true)));
+            }
+            duplicateFlatTesti(track1);
+            duplicateFlatTesti(track2);
 
             document.querySelectorAll('.testi-scroll-track').forEach(t => {
                 t.addEventListener('mouseenter', () => t.classList.add('paused'));
@@ -3322,6 +3444,9 @@
         }
 
         renderTestimonials();
+
+        // All real client data is now on the page — safe to reveal it.
+        hideLoaderAndReveal();
 
         // ============================================================
         // BOOKING
@@ -3682,6 +3807,60 @@
                 g.style.transform = `translate(${x * factor}px, ${y * factor}px)`;
             });
         });
+
+        // ============================================================
+        // RIGHT-CLICK DRAG-TO-SCROLL
+        // Hold the right mouse button and move the cursor up/down to
+        // scroll the page smoothly with it — a soft, damped follow
+        // rather than an instant 1:1 jump, so it never feels too fast
+        // or too sluggish.
+        // ============================================================
+        document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+        let rmbActive = false;
+        let rmbLastY = 0;
+        let rmbVelocity = 0;
+        const RMB_SENSITIVITY = 1.6;   // how strongly drag distance turns into scroll speed
+        const RMB_MAX_SPEED = 22;      // px per frame cap — keeps it from ever feeling "too fast"
+        const RMB_DAMPING = 0.90;      // how quickly it eases to a stop after release
+
+        document.addEventListener('mousedown', (e) => {
+            if (e.button === 2) {
+                rmbActive = true;
+                rmbLastY = e.clientY;
+                document.body.style.cursor = 'ns-resize';
+            }
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!rmbActive) return;
+            const dy = e.clientY - rmbLastY;
+            rmbLastY = e.clientY;
+            let target = dy * RMB_SENSITIVITY;
+            target = Math.max(-RMB_MAX_SPEED, Math.min(RMB_MAX_SPEED, target));
+            // Smooth toward the new target instead of snapping to it.
+            rmbVelocity += (target - rmbVelocity) * 0.35;
+        });
+
+        function stopRmbDrag() {
+            if (rmbActive) {
+                rmbActive = false;
+                document.body.style.cursor = '';
+            }
+        }
+        document.addEventListener('mouseup', (e) => { if (e.button === 2) stopRmbDrag(); });
+        window.addEventListener('blur', stopRmbDrag);
+        document.addEventListener('mouseleave', stopRmbDrag);
+
+        (function rmbScrollLoop() {
+            if (Math.abs(rmbVelocity) > 0.05) {
+                window.scrollBy(0, -rmbVelocity);
+                if (!rmbActive) rmbVelocity *= RMB_DAMPING; // ease out after release
+            } else {
+                rmbVelocity = 0;
+            }
+            requestAnimationFrame(rmbScrollLoop);
+        })();
 
         console.log('🪒 ' + businessName + ' — تجربة حلاقة فاخرة');
         console.log('📸 معرض سينمائي أفقي مع صور واضحة');
