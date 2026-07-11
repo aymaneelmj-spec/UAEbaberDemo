@@ -429,6 +429,25 @@
             align-items: center;
             gap: 12px;
         }
+        .lang-toggle {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 1px solid var(--theme-border);
+            background: var(--theme-glass);
+            color: var(--text);
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        .lang-toggle:hover {
+            background: var(--accent);
+            color: #0F0F0F;
+            border-color: var(--accent);
+        }
         .nav-social a {
             color: var(--text-soft);
             font-size: 1.1rem;
@@ -437,6 +456,26 @@
         .nav-social a:hover {
             color: var(--accent);
             transform: translateY(-2px);
+        }
+        .nav-lang-mobile-item {
+            display: none;
+        }
+        .lang-toggle-mobile {
+            margin-top: 6px;
+            padding: 8px 22px;
+            border-radius: 999px;
+            border: 1px solid var(--theme-border);
+            background: var(--theme-glass);
+            color: var(--text);
+            font-size: 0.8rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+        }
+        .lang-toggle-mobile:hover {
+            background: var(--accent);
+            color: #0F0F0F;
+            border-color: var(--accent);
         }
         .nav-toggle {
             display: none;
@@ -568,7 +607,7 @@
                    SERVICES
                    ============================================================ */
         .services {
-            padding: 80px 0;
+            padding: 60px 0;
             background: var(--primary);
             transition: background 0.5s ease;
         }
@@ -646,7 +685,7 @@
                    BARBERS
                    ============================================================ */
         .barbers {
-            padding: 80px 0;
+            padding: 60px 0;
             background: var(--secondary);
             transition: background 0.5s ease;
         }
@@ -713,7 +752,7 @@
                    BOOKING
                    ============================================================ */
         .booking {
-            padding: 80px 0;
+            padding: 60px 0;
             background: var(--primary);
             transition: background 0.5s ease;
             scroll-margin-top: 80px;
@@ -808,7 +847,7 @@
                    GALLERY – CINEMATIC HORIZONTAL SCROLL
                    ============================================================ */
         .gallery {
-            padding: 80px 0;
+            padding: 60px 0;
             background: var(--primary);
             overflow: hidden;
             transition: background 0.5s ease;
@@ -818,18 +857,18 @@
             position: relative;
             width: 100%;
             overflow: hidden;
-            padding: 20px 0;
+            padding: 10px 0;
         }
 
         .gallery-track {
             display: flex;
-            gap: 24px;
-            animation: scrollGallery 60s linear infinite;
+            gap: 22px;
+            animation: scrollGallery 42s linear infinite;
             width: max-content;
             will-change: transform;
         }
 
-        .gallery-track:hover {
+        .gallery-track.js-paused {
             animation-play-state: paused;
         }
 
@@ -847,8 +886,8 @@
         }
 
         .gallery-card {
-            min-width: 300px;
-            height: 380px;
+            min-width: 420px;
+            height: 500px;
             border-radius: 20px;
             overflow: hidden;
             flex-shrink: 0;
@@ -943,7 +982,7 @@
             display: flex;
             justify-content: center;
             gap: 14px;
-            margin-top: 24px;
+            margin-top: 16px;
         }
         .gallery-nav button {
             width: 48px;
@@ -967,8 +1006,8 @@
         /* Responsive */
         @media (max-width: 768px) {
             .gallery-card {
-                min-width: 220px;
-                height: 290px;
+                min-width: 300px;
+                height: 380px;
                 border-radius: 16px;
             }
             .gallery-card .card-overlay span {
@@ -978,8 +1017,8 @@
 
         @media (max-width: 480px) {
             .gallery-card {
-                min-width: 170px;
-                height: 230px;
+                min-width: 250px;
+                height: 320px;
                 border-radius: 14px;
             }
             .gallery-card .card-overlay {
@@ -993,9 +1032,9 @@
                 padding: 8px;
             }
             .gallery-nav button {
-                width: 38px;
-                height: 38px;
-                font-size: 0.9rem;
+                width: 44px;
+                height: 44px;
+                font-size: 0.95rem;
             }
         }
 
@@ -1097,7 +1136,7 @@
                    TESTIMONIALS
                    ============================================================ */
         .testimonials {
-            padding: 80px 0;
+            padding: 60px 0;
             background: var(--primary);
             overflow: hidden;
             transition: background 0.5s ease;
@@ -1118,9 +1157,6 @@
         .testi-scroll-track.reverse {
             animation-direction: reverse;
         }
-        .testi-scroll-track:hover {
-            animation-play-state: paused;
-        }
         .testi-scroll-track.paused {
             animation-play-state: paused;
         }
@@ -1135,14 +1171,16 @@
         }
 
         .testi-card-scroll {
-            min-width: 320px;
-            padding: 20px 24px;
-            background: var(--theme-glass);
+            min-width: 340px;
+            max-width: 340px;
+            padding: 24px 26px;
+            background: var(--theme-card);
             border: 1px solid var(--theme-border);
-            border-radius: 16px;
+            border-top: 3px solid var(--accent);
+            border-radius: 18px;
             flex-shrink: 0;
+            box-shadow: 0 14px 34px rgba(0,0,0,0.22);
             transition: all 0.3s ease;
-            backdrop-filter: blur(8px);
         }
         .testi-card-scroll:hover {
             border-color: var(--accent);
@@ -1152,43 +1190,47 @@
         .testi-card-scroll .google-badge {
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-bottom: 8px;
+            gap: 10px;
+            margin-bottom: 12px;
             flex-wrap: wrap;
         }
         .testi-card-scroll .google-badge .google-icon {
             display: flex;
             align-items: center;
-            gap: 4px;
-            font-weight: 700;
-            color: #4285F4;
-            font-size: 0.8rem;
+            gap: 6px;
+            font-weight: 800;
+            color: #FFFFFF;
+            font-size: 0.82rem;
+            background: linear-gradient(135deg, #4285F4, #34A853);
+            padding: 5px 12px 5px 9px;
+            border-radius: 999px;
+            box-shadow: 0 4px 12px rgba(66,133,244,0.35);
         }
         .testi-card-scroll .google-badge .google-icon i {
-            font-size: 1rem;
+            font-size: 0.95rem;
         }
         .testi-card-scroll .google-badge .g-stars {
             color: #FBBC04;
-            font-size: 0.8rem;
+            font-size: 0.95rem;
             letter-spacing: 1px;
         }
         .testi-card-scroll .google-badge .g-stars i {
             margin: 0 1px;
         }
         .testi-card-scroll blockquote {
-            font-size: 0.9rem;
-            font-weight: 300;
-            line-height: 1.7;
-            color: var(--text-soft);
-            margin-bottom: 8px;
+            font-size: 0.98rem;
+            font-weight: 400;
+            line-height: 1.8;
+            color: var(--text);
+            margin-bottom: 12px;
         }
         .testi-card-scroll .t-name {
-            font-weight: 700;
-            font-size: 0.85rem;
+            font-weight: 800;
+            font-size: 0.92rem;
             color: var(--text);
         }
         .testi-card-scroll .t-date {
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             color: var(--text-soft);
         }
 
@@ -1196,7 +1238,7 @@
                    ABOUT
                    ============================================================ */
         .about {
-            padding: 80px 0;
+            padding: 60px 0;
             background: var(--secondary);
             transition: background 0.5s ease;
         }
@@ -1267,10 +1309,77 @@
         }
 
         /* ============================================================
+                   PRICE LIST
+                   ============================================================ */
+        .pricelist {
+            padding: 70px 0;
+            background: var(--secondary);
+            transition: background 0.5s ease;
+        }
+        .pricelist-table {
+            max-width: 720px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            border-radius: 18px;
+            overflow: hidden;
+            border: 1px solid var(--theme-border);
+        }
+        .pricelist-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 16px 22px;
+            background: var(--theme-card);
+            transition: background 0.25s ease;
+        }
+        .pricelist-row:hover {
+            background: var(--accent-glow);
+        }
+        .pricelist-row .pl-name {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text);
+            font-weight: 600;
+            font-size: 0.98rem;
+        }
+        .pricelist-row .pl-name i {
+            color: var(--accent);
+            width: 26px;
+            text-align: center;
+        }
+        .pricelist-row .pl-meta {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-shrink: 0;
+        }
+        .pricelist-row .pl-time {
+            color: var(--text-soft);
+            font-size: 0.8rem;
+            font-weight: 300;
+        }
+        .pricelist-row .pl-price {
+            color: var(--accent);
+            font-weight: 800;
+            font-size: 1.05rem;
+            white-space: nowrap;
+        }
+        @media (max-width: 480px) {
+            .pricelist-row { padding: 13px 16px; }
+            .pricelist-row .pl-name { font-size: 0.85rem; gap: 8px; }
+            .pricelist-row .pl-time { display: none; }
+            .pricelist-row .pl-price { font-size: 0.92rem; }
+        }
+
+        /* ============================================================
                    CONTACT
                    ============================================================ */
         .contact {
-            padding: 80px 0;
+            padding: 60px 0;
             background: var(--primary);
             transition: background 0.5s ease;
         }
@@ -1961,6 +2070,11 @@
         }
 
         @media (max-width: 768px) {
+            .services, .barbers, .booking, .gallery, .social,
+            .testimonials, .about, .contact {
+                padding: 40px 0;
+            }
+            .pricelist { padding: 44px 0; }
             .nav-links,
             .nav-social {
                 display: none;
@@ -1984,6 +2098,11 @@
             .nav-links.open a {
                 font-size: 1rem;
                 padding: 6px 0;
+            }
+            .nav-lang-mobile-item {
+                display: flex;
+                justify-content: center;
+                width: 100%;
             }
 
             .services-grid {
@@ -2439,7 +2558,7 @@
     <!-- ===== LOADER ===== -->
     <div class="loader" id="loader">
         <div class="loader-ring"></div>
-        <p>جاري التحميل...</p>
+        <p id="loaderText">جاري التحميل...</p>
     </div>
 
     <!-- ===== CURSOR GLOW ===== -->
@@ -2492,21 +2611,30 @@
         <div class="container">
             <div class="nav-logo" id="navLogo">ديوان <span>الحلاقة</span></div>
             <ul class="nav-links" id="navLinks">
-                <li><a href="#hero" data-nav>الرئيسية</a></li>
-                <li><a href="#services" data-nav>خدمات</a></li>
-                <li><a href="#barbers" data-nav>حلاقون</a></li>
-                <li><a href="#gallery" data-nav>معرض</a></li>
-                <li><a href="#booking" data-nav>حجز</a></li>
-                <li><a href="#testimonials" data-nav>آراء</a></li>
-                <li><a href="#contact" data-nav>اتصال</a></li>
+                <li><a href="#hero" data-nav id="navHome">الرئيسية</a></li>
+                <li><a href="#services" data-nav id="navServices">خدمات</a></li>
+                <li><a href="#barbers" data-nav id="navBarbers">حلاقون</a></li>
+                <li><a href="#gallery" data-nav id="navGallery">معرض</a></li>
+                <li><a href="#pricelist" data-nav id="navPricelist">الأسعار</a></li>
+                <li><a href="#booking" data-nav id="navBooking">حجز</a></li>
+                <li><a href="#testimonials" data-nav id="navTestimonials">آراء</a></li>
+                <li><a href="#contact" data-nav id="navContact">اتصال</a></li>
+                <li class="nav-lang-mobile-item"><button class="lang-toggle-mobile" id="langToggleMobile" type="button">EN</button></li>
             </ul>
             <div class="nav-social">
+                <button class="lang-toggle" id="langToggle" type="button">EN</button>
                 <a href="https://wa.me/966500000000" target="_blank" aria-label="واتساب"><i class="fab fa-whatsapp"></i></a>
                 <a href="https://instagram.com" target="_blank" aria-label="انستغرام"><i class="fab fa-instagram"></i></a>
                 <a href="https://tiktok.com" target="_blank" aria-label="تيك توك"><i class="fab fa-tiktok"></i></a>
-                <div class="nav-toggle" id="navToggle" aria-label="القائمة">
-                    <span></span><span></span><span></span>
-                </div>
+            </div>
+            <!-- Moved OUT of .nav-social on purpose: that container is
+                 display:none on mobile, and a display:none ancestor
+                 hides its children no matter what CSS the child has —
+                 so the hamburger used to disappear right along with it,
+                 leaving mobile visitors with no way to open the menu
+                 at all. As a sibling here it stays reachable. -->
+            <div class="nav-toggle" id="navToggle" aria-label="القائمة">
+                <span></span><span></span><span></span>
             </div>
         </div>
     </nav>
@@ -2518,11 +2646,11 @@
         <div class="hero-glow" style="bottom:10%;left:0;animation-delay:3s;"></div>
         <div class="hero-content">
             <div class="hero-badge" id="heroBadge">✦ صالون فاخر للرجال</div>
-            <h1 class="hero-title">تجربة <span class="highlight">حلاقة فاخرة</span></h1>
-            <p class="hero-sub">قصات شعر احترافية، تصفيف لحى، واسترخاء في أجواء عصرية راقية مصممة للرجل العصري الذي يقدر الأناقة والثقة.</p>
+            <h1 class="hero-title" id="heroTitle">تجربة <span class="highlight">حلاقة فاخرة</span></h1>
+            <p class="hero-sub" id="heroSub">قصات شعر احترافية، تصفيف لحى، واسترخاء في أجواء عصرية راقية مصممة للرجل العصري الذي يقدر الأناقة والثقة.</p>
             <div class="hero-btns">
-                <a href="#booking" class="btn-primary"><i class="fas fa-calendar-check"></i> احجز موعدك</a>
-                <a href="https://wa.me/966500000000" target="_blank" class="btn-outline"><i class="fab fa-whatsapp"></i> واتساب</a>
+                <a href="#booking" class="btn-primary"><i class="fas fa-calendar-check"></i> <span id="heroBookBtn">احجز موعدك</span></a>
+                <a href="https://wa.me/966500000000" target="_blank" class="btn-outline"><i class="fab fa-whatsapp"></i> <span id="heroWaBtn">واتساب</span></a>
             </div>
         </div>
     </section>
@@ -2530,8 +2658,8 @@
     <!-- ===== SERVICES ===== -->
     <section class="services section-reveal" id="services">
         <div class="container">
-            <h2 class="section-title">خدماتنا <span class="text-accent">الفاخرة</span></h2>
-            <p class="section-sub">نقدم لكم أفضل خدمات الحلاقة والعناية في أجواء عصرية هادئة</p>
+            <h2 class="section-title" id="servicesTitle">خدماتنا <span class="text-accent">الفاخرة</span></h2>
+            <p class="section-sub" id="servicesSub">نقدم لكم أفضل خدمات الحلاقة والعناية في أجواء عصرية هادئة</p>
             <div class="services-grid" id="servicesGrid"></div>
         </div>
     </section>
@@ -2539,9 +2667,18 @@
     <!-- ===== BARBERS ===== -->
     <section class="barbers section-reveal" id="barbers">
         <div class="container">
-            <h2 class="section-title">حلاقون <span class="text-accent">محترفون</span></h2>
-            <p class="section-sub">اختر الحلاق المفضل لديك واحجز معه مباشرة</p>
+            <h2 class="section-title" id="barbersTitle">حلاقون <span class="text-accent">محترفون</span></h2>
+            <p class="section-sub" id="barbersSub">اختر الحلاق المفضل لديك واحجز معه مباشرة</p>
             <div class="barbers-grid" id="barbersGrid"></div>
+        </div>
+    </section>
+
+    <!-- ===== PRICE LIST ===== -->
+    <section class="pricelist section-reveal" id="pricelist">
+        <div class="container">
+            <h2 class="section-title" id="pricelistTitle">قائمة <span class="text-accent">الأسعار</span></h2>
+            <p class="section-sub" id="pricelistSub">أسعار واضحة وثابتة لكل خدماتنا</p>
+            <div class="pricelist-table" id="pricelistTable"></div>
         </div>
     </section>
 
@@ -2549,12 +2686,12 @@
     <section class="booking section-reveal" id="booking">
         <div class="container">
             <div class="booking-form-wrap">
-                <h2>احجز <span class="text-accent">موعدك</span></h2>
-                <p>املأ البيانات وسنقوم بتأكيد حجزك فوراً</p>
+                <h2 id="bookingTitle">احجز <span class="text-accent">موعدك</span></h2>
+                <p id="bookingSub">املأ البيانات وسنقوم بتأكيد حجزك فوراً</p>
                 <form id="bookingForm">
                     <div class="form-row">
                         <div class="form-group" id="serviceGroup">
-                            <label><i class="fas fa-cut"></i> الخدمة</label>
+                            <label id="lblService"><i class="fas fa-cut"></i> <span>الخدمة</span></label>
                             <select id="bookService" required>
                                 <option value="حلاقة">حلاقة</option>
                                 <option value="تهذيب لحية">تهذيب لحية</option>
@@ -2569,7 +2706,7 @@
                             </select>
                         </div>
                         <div class="form-group" id="barberGroup">
-                            <label><i class="fas fa-user-tie"></i> الحلاق</label>
+                            <label id="lblBarber"><i class="fas fa-user-tie"></i> <span>الحلاق</span></label>
                             <select id="bookBarber" required>
                                 <option value="أحمد">أحمد</option>
                                 <option value="خالد">خالد</option>
@@ -2582,27 +2719,27 @@
                     </div>
                     <div class="form-row">
                         <div class="form-group" id="dateGroup">
-                            <label><i class="fas fa-calendar"></i> التاريخ</label>
+                            <label id="lblDate"><i class="fas fa-calendar"></i> <span>التاريخ</span></label>
                             <input type="date" id="bookDate" required />
                         </div>
                         <div class="form-group" id="timeGroup">
-                            <label><i class="fas fa-clock"></i> الوقت</label>
+                            <label id="lblTime"><i class="fas fa-clock"></i> <span>الوقت</span></label>
                             <input type="time" id="bookTime" required />
                         </div>
                     </div>
                     <div class="form-row">
                         <div class="form-group" id="nameGroup">
-                            <label><i class="fas fa-user"></i> الاسم</label>
+                            <label id="lblName"><i class="fas fa-user"></i> <span>الاسم</span></label>
                             <input type="text" id="bookName" placeholder="أدخل اسمك" required />
                         </div>
                         <div class="form-group" id="phoneGroup">
-                            <label><i class="fas fa-phone"></i> الجوال</label>
+                            <label id="lblPhone"><i class="fas fa-phone"></i> <span>الجوال</span></label>
                             <input type="tel" id="bookPhone" placeholder="05xxxxxxxx" required />
                         </div>
                     </div>
                     <div class="booking-btn-wrapper">
                         <button type="submit" class="btn-primary">
-                            <i class="fas fa-check-circle"></i> تأكيد الحجز
+                            <i class="fas fa-check-circle"></i> <span id="bookSubmitBtn">تأكيد الحجز</span>
                         </button>
                     </div>
                 </form>
@@ -2613,17 +2750,17 @@
     <!-- ===== GALLERY – CINEMATIC HORIZONTAL SCROLL ===== -->
     <section class="gallery section-reveal" id="gallery">
         <div class="container">
-            <h2 class="section-title">
+            <h2 class="section-title" id="galleryTitle">
                 معرض <span class="text-accent">الصور</span>
             </h2>
-            <p class="section-sub">
-                اكتشف أجواء الصالون وجودة خدماتنا – مرر أو اضغط على الصورة لتكبيرها
+            <p class="section-sub" id="gallerySub">
+                اكتشف أجواء الصالون وجودة خدماتنا – مرر أو المس الصورة لتكبيرها
             </p>
 
             <div class="gallery-cinematic">
                 <div class="gallery-track" id="galleryTrack1"></div>
             </div>
-            <div class="gallery-cinematic" style="margin-top:16px;">
+            <div class="gallery-cinematic" style="margin-top:10px;">
                 <div class="gallery-track reverse" id="galleryTrack2"></div>
             </div>
 
@@ -2643,12 +2780,12 @@
     <!-- ===== SOCIAL ===== -->
     <section class="social section-reveal" id="social">
         <div class="container">
-            <h2 class="section-title">تابعنا <span class="text-accent">على السوشيال</span></h2>
-            <p class="section-sub">انضم لمجتمعنا وشاهد أحدث أعمالنا</p>
+            <h2 class="section-title" id="socialTitle">تابعنا <span class="text-accent">على السوشيال</span></h2>
+            <p class="section-sub" id="socialSub">انضم لمجتمعنا وشاهد أحدث أعمالنا</p>
             <div class="social-grid">
-                <a href="https://instagram.com" target="_blank" class="social-card"><i class="fab fa-instagram"></i><h4>انستغرام</h4><p>شاهد أعمالنا اليومية</p></a>
-                <a href="https://tiktok.com" target="_blank" class="social-card"><i class="fab fa-tiktok"></i><h4>تيك توك</h4><p>مقاطع قصيرة ممتعة</p></a>
-                <a href="https://wa.me/966500000000" target="_blank" class="social-card"><i class="fab fa-whatsapp"></i><h4>واتساب</h4><p>تواصل معنا مباشرة</p></a>
+                <a href="https://instagram.com" target="_blank" class="social-card"><i class="fab fa-instagram"></i><h4 id="socialIgTitle">انستغرام</h4><p id="socialIgSub">شاهد أعمالنا اليومية</p></a>
+                <a href="https://tiktok.com" target="_blank" class="social-card"><i class="fab fa-tiktok"></i><h4 id="socialTtTitle">تيك توك</h4><p id="socialTtSub">مقاطع قصيرة ممتعة</p></a>
+                <a href="https://wa.me/966500000000" target="_blank" class="social-card"><i class="fab fa-whatsapp"></i><h4 id="socialWaTitle">واتساب</h4><p id="socialWaSub">تواصل معنا مباشرة</p></a>
             </div>
         </div>
     </section>
@@ -2656,7 +2793,7 @@
     <!-- ===== TESTIMONIALS ===== -->
     <section class="testimonials section-reveal" id="testimonials">
         <div class="container">
-            <h2 class="section-title">آراء <span class="text-accent">العملاء</span></h2>
+            <h2 class="section-title" id="testiTitle">آراء <span class="text-accent">العملاء</span></h2>
             <p class="section-sub" id="testiSub">ما يقوله عملاؤنا عن تجربتهم في صالون ديوان الحلاقة</p>
             <div class="testi-scroll-wrapper">
                 <div class="testi-scroll-track" id="testiTrack1"></div>
@@ -2672,12 +2809,12 @@
         <div class="container">
             <div class="about-grid">
                 <div class="about-text">
-                    <h2>حول <span>ديوان الحلاقة</span></h2>
-                    <p>تجربة حلاقة راقية في أجواء عصرية فاخرة مصممة للرجل العصري الذي يقدر الأناقة والثقة والاسترخاء. نقدم خدمات احترافية بأحدث التقنيات وأفضل المنتجات العالمية.</p>
+                    <h2 id="aboutTitle"><span id="aboutTitlePrefix">حول</span> <span id="aboutTitleName">ديوان الحلاقة</span></h2>
+                    <p id="aboutText">تجربة حلاقة راقية في أجواء عصرية فاخرة مصممة للرجل العصري الذي يقدر الأناقة والثقة والاسترخاء. نقدم خدمات احترافية بأحدث التقنيات وأفضل المنتجات العالمية.</p>
                     <div class="about-stats">
-                        <div class="stat-item"><div class="num" data-count="10">0</div><div class="label">سنوات خبرة</div></div>
-                        <div class="stat-item"><div class="num" data-count="5000">0</div><div class="label">عميل سعيد</div></div>
-                        <div class="stat-item"><div class="num" data-count="8">0</div><div class="label">حلاقين محترفين</div></div>
+                        <div class="stat-item"><div class="num" data-count="10">0</div><div class="label" id="aboutStat1">سنوات خبرة</div></div>
+                        <div class="stat-item"><div class="num" data-count="5000">0</div><div class="label" id="aboutStat2">عميل سعيد</div></div>
+                        <div class="stat-item"><div class="num" data-count="8">0</div><div class="label" id="aboutStat3">حلاقين محترفين</div></div>
                     </div>
                 </div>
                 <div class="about-image" id="aboutImageBox">
@@ -2693,19 +2830,19 @@
     <!-- ===== CONTACT ===== -->
     <section class="contact section-reveal" id="contact">
         <div class="container">
-            <h2 class="section-title">اتصل <span class="text-accent">بنا</span></h2>
-            <p class="section-sub">نحن هنا لخدمتك — تواصل معنا بأي وقت</p>
+            <h2 class="section-title" id="contactTitle">اتصل <span class="text-accent">بنا</span></h2>
+            <p class="section-sub" id="contactSub">نحن هنا لخدمتك — تواصل معنا بأي وقت</p>
             <div class="contact-grid">
                 <div class="contact-info">
-                    <h3>معلومات <span class="text-accent">التواصل</span></h3>
-                    <p>يمكنك التواصل معنا عبر القنوات التالية</p>
+                    <h3 id="contactInfoTitle">معلومات <span class="text-accent">التواصل</span></h3>
+                    <p id="contactInfoSub">يمكنك التواصل معنا عبر القنوات التالية</p>
                     <div class="contact-item"><i class="fas fa-map-marker-alt"></i><a id="contactAddress" href="#" target="_blank" style="color:inherit;text-decoration:none;">الرياض، المملكة العربية السعودية</a></div>
                     <div class="contact-item"><i class="fas fa-phone"></i><span id="contactPhone">+966 50 000 0000</span></div>
                     <div class="contact-item"><i class="fas fa-clock"></i><span id="contactHours">يومياً 10:00 ص – 12:00 ص</span></div>
                     <div class="contact-item"><i class="fab fa-instagram"></i><span id="contactInstagram">@diwan_barber</span></div>
                     <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap;">
-                        <a href="https://wa.me/966500000000" target="_blank" class="btn-primary" style="padding:8px 20px;font-size:0.8rem;"><i class="fab fa-whatsapp"></i> واتساب</a>
-                        <a href="https://instagram.com" target="_blank" class="btn-outline" style="padding:8px 20px;font-size:0.8rem;"><i class="fab fa-instagram"></i> انستغرام</a>
+                        <a href="https://wa.me/966500000000" target="_blank" class="btn-primary" style="padding:8px 20px;font-size:0.8rem;"><i class="fab fa-whatsapp"></i> <span id="contactWaBtn">واتساب</span></a>
+                        <a href="https://instagram.com" target="_blank" class="btn-outline" style="padding:8px 20px;font-size:0.8rem;"><i class="fab fa-instagram"></i> <span id="contactIgBtn">انستغرام</span></a>
                     </div>
                 </div>
                 <div class="contact-map" id="contactMapBox">
@@ -2722,12 +2859,12 @@
     <footer class="footer section-reveal" id="footer">
         <div class="container">
             <div class="footer-grid">
-                <div class="footer-brand"><div class="logo" id="footerLogo">ديوان <span>الحلاقة</span></div><p>صالون فاخر للرجال يقدم تجربة حلاقة راقية في أجواء عصرية هادئة.</p></div>
-                <div class="footer-links"><h4>روابط سريعة</h4><a href="#services">خدمات</a><a href="#barbers">حلاقون</a><a href="#gallery">معرض</a><a href="#booking">حجز</a><a href="#contact">اتصال</a></div>
-                <div class="footer-links"><h4>تابعنا</h4><a href="https://instagram.com" target="_blank">انستغرام</a><a href="https://tiktok.com" target="_blank">تيك توك</a><a href="https://wa.me/966500000000" target="_blank">واتساب</a></div>
+                <div class="footer-brand"><div class="logo" id="footerLogo">ديوان <span>الحلاقة</span></div><p id="footerBrandText">صالون فاخر للرجال يقدم تجربة حلاقة راقية في أجواء عصرية هادئة.</p></div>
+                <div class="footer-links"><h4 id="footerLinksTitle">روابط سريعة</h4><a href="#services" id="footerLinkServices">خدمات</a><a href="#barbers" id="footerLinkBarbers">حلاقون</a><a href="#gallery" id="footerLinkGallery">معرض</a><a href="#pricelist" id="footerLinkPricelist">الأسعار</a><a href="#booking" id="footerLinkBooking">حجز</a><a href="#contact" id="footerLinkContact">اتصال</a></div>
+                <div class="footer-links"><h4 id="footerSocialTitle">تابعنا</h4><a href="https://instagram.com" target="_blank" id="footerLinkIg">انستغرام</a><a href="https://tiktok.com" target="_blank" id="footerLinkTt">تيك توك</a><a href="https://wa.me/966500000000" target="_blank" id="footerLinkWa">واتساب</a></div>
             </div>
             <div class="footer-bottom">
-                <span>© 2026 ديوان الحلاقة — جميع الحقوق محفوظة</span>
+                <span id="footerCopyright">© 2026 ديوان الحلاقة — جميع الحقوق محفوظة</span>
                 <div class="footer-social">
                     <a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
                     <a href="https://tiktok.com" target="_blank"><i class="fab fa-tiktok"></i></a>
@@ -2741,8 +2878,8 @@
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal-box">
             <i class="fas fa-check-circle"></i>
-            <h3>تم الحجز بنجاح!</h3>
-            <p>سيتم إرسال تفاصيل الحجز إلى رقم الجوال الذي أدخلته.</p>
+            <h3 id="modalTitle">تم الحجز بنجاح!</h3>
+            <p id="modalText">سيتم إرسال تفاصيل الحجز إلى رقم الجوال الذي أدخلته.</p>
             <button class="btn-primary" id="modalClose">حسناً</button>
         </div>
     </div>
@@ -3044,18 +3181,18 @@
         ];
 
         const DEFAULT_GALLERY = [
-            'https://loremflickr.com/800/1000/barbershop?lock=101',
-            'https://loremflickr.com/800/1000/barber,haircut?lock=102',
-            'https://loremflickr.com/800/1000/barbershop,interior?lock=103',
-            'https://loremflickr.com/800/1000/barber,shave?lock=104',
-            'https://loremflickr.com/800/1000/barbershop,chair?lock=105',
-            'https://loremflickr.com/800/1000/barber,beard?lock=106',
-            'https://loremflickr.com/800/1000/barbershop?lock=107',
-            'https://loremflickr.com/800/1000/barber,haircut?lock=108',
-            'https://loremflickr.com/800/1000/barbershop,tools?lock=109',
-            'https://loremflickr.com/800/1000/barber,shave?lock=110',
-            'https://loremflickr.com/800/1000/barbershop,interior?lock=111',
-            'https://loremflickr.com/800/1000/barber,beard?lock=112',
+            'https://picsum.photos/seed/barber101/800/1000',
+            'https://picsum.photos/seed/barber102/800/1000',
+            'https://picsum.photos/seed/barber103/800/1000',
+            'https://picsum.photos/seed/barber104/800/1000',
+            'https://picsum.photos/seed/barber105/800/1000',
+            'https://picsum.photos/seed/barber106/800/1000',
+            'https://picsum.photos/seed/barber107/800/1000',
+            'https://picsum.photos/seed/barber108/800/1000',
+            'https://picsum.photos/seed/barber109/800/1000',
+            'https://picsum.photos/seed/barber110/800/1000',
+            'https://picsum.photos/seed/barber111/800/1000',
+            'https://picsum.photos/seed/barber112/800/1000',
         ];
 
         const DEFAULT_TESTIMONIALS = [
@@ -3072,10 +3209,72 @@
             { name: 'فارس الشهراني', text: 'خدمة ممتازة وسعر مناسب. الصالون نظيف ومرتب.', stars: 4, date: 'منذ ١٠ أيام' },
         ];
 
-        const servicesData = (Array.isArray(SITE_DATA.services) && SITE_DATA.services.length) ? SITE_DATA.services : DEFAULT_SERVICES;
-        const barbersData = (Array.isArray(SITE_DATA.barbers) && SITE_DATA.barbers.length) ? SITE_DATA.barbers : DEFAULT_BARBERS;
+        // ============================================================
+        // ENGLISH VERSIONS of the generic demo content (used whenever
+        // SITE_DATA doesn't supply its own services/barbers/reviews —
+        // i.e. for basically every raw scraped cold-outreach lead).
+        // Real client data (name, address, photos) is shown as-is in
+        // whichever language it was scraped in; only this generic
+        // demo filler content gets a proper translation.
+        // ============================================================
+        const DEFAULT_SERVICES_EN = [
+            { icon: 'fas fa-cut', name: 'Haircut', desc: 'Professional cut with the latest techniques', price: 120, time: '30 min' },
+            { icon: 'fas fa-beard', name: 'Beard Trim', desc: 'Precise trimming and perfect styling', price: 80, time: '20 min' },
+            { icon: 'fas fa-male', name: 'Haircut + Beard', desc: 'A complete grooming package', price: 180, time: '50 min' },
+            { icon: 'fas fa-crown', name: 'VIP Care', desc: 'An exclusive, luxury experience', price: 250, time: '60 min' },
+            { icon: 'fas fa-child', name: "Kids' Haircut", desc: 'A gentle cut for children', price: 90, time: '25 min' },
+            { icon: 'fas fa-hand-sparkles', name: 'Skin Care', desc: 'Deep cleansing and hydration', price: 100, time: '25 min' },
+            { icon: 'fas fa-mask', name: 'Black Mask', desc: 'A detoxifying treatment', price: 140, time: '30 min' },
+            { icon: 'fas fa-hot-tub', name: 'Traditional Wax Shave', desc: 'A traditional, luxurious shave', price: 160, time: '35 min' },
+            { icon: 'fas fa-wind', name: 'Hair Styling', desc: 'Modern and elegant styling', price: 70, time: '15 min' },
+            { icon: 'fas fa-spa', name: 'Relaxing Massage', desc: 'A soothing massage session', price: 120, time: '30 min' },
+        ];
+
+        const DEFAULT_BARBERS_EN = [
+            { name: 'Ahmed', title: 'Haircut Expert', badge: '⭐ 4.9', emoji: '👨‍🦱' },
+            { name: 'Khaled', title: 'Beard Specialist', badge: '⭐ 4.8', emoji: '🧔' },
+            { name: 'Youssef', title: 'Hair Designer', badge: '⭐ 4.7', emoji: '💈' },
+            { name: 'Saad', title: 'Care & Grooming', badge: '⭐ 4.9', emoji: '✨' },
+            { name: 'Faisal', title: 'Classic Barber', badge: '⭐ 4.6', emoji: '🎩' },
+            { name: 'Majed', title: '10 Years Experience', badge: '⭐ 4.8', emoji: '🏆' },
+        ];
+
+        const DEFAULT_TESTIMONIALS_EN = [
+            { name: 'Mohammed Al-Otaibi', text: 'Best salon in Riyadh! Elegant service and a luxurious atmosphere. Highly recommend.', stars: 5, date: '3 days ago' },
+            { name: 'Fahad Al-Subaie', text: 'An unforgettable experience — professional care and real attention to detail.', stars: 5, date: 'a week ago' },
+            { name: 'Salman Al-Harbi', text: 'Wonderful, stylish place. Fast service and amazing results.', stars: 5, date: '5 days ago' },
+            { name: 'Nawaf Al-Dosari', text: 'Classy service, professional barbers, and a calm atmosphere.', stars: 5, date: '2 days ago' },
+            { name: 'Abdullah Al-Shammari', text: 'Artistic cuts and precise shaving. Fair price, high quality.', stars: 4, date: '4 days ago' },
+            { name: 'Khaled Al-Zahrani', text: 'Excellent service and a luxurious vibe. Very professional barbers.', stars: 5, date: '2 weeks ago' },
+            { name: 'Majed Al-Qahtani', text: 'A completely different haircut experience — recommend it to everyone.', stars: 5, date: '6 days ago' },
+            { name: 'Saad Al-Mutairi', text: 'Classy place, world-class service. Best salon in the kingdom.', stars: 5, date: '3 weeks ago' },
+            { name: 'Ali Al-Ghamdi', text: "Professional barbers and a great atmosphere. I'll definitely be back.", stars: 5, date: 'a week ago' },
+            { name: 'Faris Al-Shahrani', text: 'Excellent service and a fair price. Clean, tidy salon.', stars: 4, date: '10 days ago' },
+        ];
+
+        let currentLang = (function () {
+            try {
+                const saved = localStorage.getItem('siteLang');
+                if (saved === 'en' || saved === 'ar') return saved;
+            } catch (e) { /* localStorage unavailable — default to ar */ }
+            return 'ar';
+        })();
+
+        function getServicesData() {
+            if (Array.isArray(SITE_DATA.services) && SITE_DATA.services.length) return SITE_DATA.services;
+            return currentLang === 'en' ? DEFAULT_SERVICES_EN : DEFAULT_SERVICES;
+        }
+        function getBarbersData() {
+            if (Array.isArray(SITE_DATA.barbers) && SITE_DATA.barbers.length) return SITE_DATA.barbers;
+            return currentLang === 'en' ? DEFAULT_BARBERS_EN : DEFAULT_BARBERS;
+        }
+        function getTestiData() {
+            if (Array.isArray(SITE_DATA.reviews) && SITE_DATA.reviews.length) return SITE_DATA.reviews;
+            return currentLang === 'en' ? DEFAULT_TESTIMONIALS_EN : DEFAULT_TESTIMONIALS;
+        }
+
+        // galleryImages doesn't need a language variant — photos have no language.
         const galleryImages = (Array.isArray(SITE_DATA.gallery) && SITE_DATA.gallery.length) ? SITE_DATA.gallery : DEFAULT_GALLERY;
-        const testiData = (Array.isArray(SITE_DATA.reviews) && SITE_DATA.reviews.length) ? SITE_DATA.reviews : DEFAULT_TESTIMONIALS;
 
         // ============================================================
         // APPLY BUSINESS INFO TO THE PAGE
@@ -3103,21 +3302,37 @@
         if (heroBadgeEl) heroBadgeEl.textContent = `✦ ${businessName}`;
         const testiSubEl = document.getElementById('testiSub');
         if (testiSubEl) testiSubEl.textContent = `ما يقوله عملاؤنا عن تجربتهم في ${businessName}`;
+        const aboutTitleNameEl = document.getElementById('aboutTitleName');
+        if (aboutTitleNameEl) aboutTitleNameEl.textContent = businessName;
+        const footerBrandTextEl = document.getElementById('footerBrandText');
+        if (footerBrandTextEl) footerBrandTextEl.textContent = `${businessName} — تجربة حلاقة راقية في أجواء عصرية هادئة.`;
+        const footerCopyrightEl = document.getElementById('footerCopyright');
+        if (footerCopyrightEl) footerCopyrightEl.textContent = `© ${new Date().getFullYear()} ${businessName} — جميع الحقوق محفوظة`;
 
         // Use the first real gallery photo as the "about" section image
         // (instead of the static "صورة الصالون" placeholder) whenever
-        // we actually have client photos to show.
+        // we actually have client photos to show. The image is layered
+        // absolutely over the box and only swapped in once it has
+        // actually finished loading — this avoids the image and the
+        // placeholder text squeezing into the box side-by-side (the
+        // "grey box + image" look), since both would otherwise be
+        // flex children of the same container at once.
         if (galleryImages.length) {
             const aboutBox = document.getElementById('aboutImageBox');
+            const aboutPlaceholder = document.getElementById('aboutImagePlaceholder');
             if (aboutBox) {
                 const aboutImg = document.createElement('img');
-                aboutImg.src = galleryImages[0];
                 aboutImg.alt = businessName;
                 aboutImg.loading = 'lazy';
                 aboutImg.referrerPolicy = 'no-referrer';
-                aboutImg.style.cssText = 'width:100%;height:100%;object-fit:cover;';
+                aboutImg.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .4s ease;';
+                aboutImg.onload = () => {
+                    aboutImg.style.opacity = '1';
+                    if (aboutPlaceholder) aboutPlaceholder.style.display = 'none';
+                };
                 aboutImg.onerror = () => { aboutImg.remove(); };
                 aboutBox.appendChild(aboutImg);
+                aboutImg.src = galleryImages[0];
             }
         }
 
@@ -3146,45 +3361,98 @@
         fitText(footerLogoEl);
 
         // ============================================================
-        // RENDER SERVICES
+        // RENDER SERVICES + keep the booking form's dropdown in sync
+        // (previously the <select> options were static HTML in the
+        // default demo language, so a client with custom services — or
+        // simply the visitor switching to English — still saw the old
+        // hardcoded Arabic options in the booking form).
         // ============================================================
         const servicesGrid = document.getElementById('servicesGrid');
-        servicesData.forEach((s) => {
-            const card = document.createElement('div');
-            card.className = 'service-card';
-            card.innerHTML = `
-                    <span class="service-icon"><i class="${s.icon}"></i></span>
-                    <h3>${s.name}</h3>
-                    <p class="desc">${s.desc}</p>
-                    <div class="service-meta">
-                        <span><i class="fas fa-tag"></i> ${formatPrice(s.price, baseCurrency, visitorCurrency)}</span>
-                        <span><i class="fas fa-clock"></i> ${s.time}</span>
-                    </div>
-                    <button class="btn-outline btn-sm book-service-btn" data-service="${s.name}">
-                        <i class="fas fa-calendar-plus"></i> احجز
-                    </button>
-                `;
-            servicesGrid.appendChild(card);
-        });
+        const bookServiceSelect = document.getElementById('bookService');
+        function renderServices() {
+            const data = getServicesData();
+            servicesGrid.innerHTML = '';
+            bookServiceSelect.innerHTML = '';
+            const bookLabel = currentLang === 'en' ? 'Book' : 'احجز';
+            data.forEach((s) => {
+                const card = document.createElement('div');
+                card.className = 'service-card';
+                card.innerHTML = `
+                        <span class="service-icon"><i class="${s.icon}"></i></span>
+                        <h3>${s.name}</h3>
+                        <p class="desc">${s.desc}</p>
+                        <div class="service-meta">
+                            <span><i class="fas fa-tag"></i> ${formatPrice(s.price, baseCurrency, visitorCurrency)}</span>
+                            <span><i class="fas fa-clock"></i> ${s.time}</span>
+                        </div>
+                        <button class="btn-outline btn-sm book-service-btn" data-service="${s.name}">
+                            <i class="fas fa-calendar-plus"></i> ${bookLabel}
+                        </button>
+                    `;
+                servicesGrid.appendChild(card);
+
+                const opt = document.createElement('option');
+                opt.value = s.name;
+                opt.textContent = s.name;
+                bookServiceSelect.appendChild(opt);
+            });
+        }
+        renderServices();
 
         // ============================================================
-        // RENDER BARBERS
+        // RENDER BARBERS + keep the booking form's dropdown in sync
         // ============================================================
         const barbersGrid = document.getElementById('barbersGrid');
-        barbersData.forEach((b) => {
-            const card = document.createElement('div');
-            card.className = 'barber-card';
-            card.innerHTML = `
-                    <div class="barber-avatar">${b.emoji}</div>
-                    <h3>${b.name}</h3>
-                    <div class="title">${b.title}</div>
-                    <div class="badge">${b.badge}</div>
-                    <button class="btn-outline btn-xs book-barber-btn" data-barber="${b.name}">
-                        <i class="fas fa-calendar-plus"></i> احجز
-                    </button>
-                `;
-            barbersGrid.appendChild(card);
-        });
+        const bookBarberSelect = document.getElementById('bookBarber');
+        function renderBarbers() {
+            const data = getBarbersData();
+            barbersGrid.innerHTML = '';
+            bookBarberSelect.innerHTML = '';
+            const bookLabel = currentLang === 'en' ? 'Book' : 'احجز';
+            data.forEach((b) => {
+                const card = document.createElement('div');
+                card.className = 'barber-card';
+                card.innerHTML = `
+                        <div class="barber-avatar">${b.emoji}</div>
+                        <h3>${b.name}</h3>
+                        <div class="title">${b.title}</div>
+                        <div class="badge">${b.badge}</div>
+                        <button class="btn-outline btn-xs book-barber-btn" data-barber="${b.name}">
+                            <i class="fas fa-calendar-plus"></i> ${bookLabel}
+                        </button>
+                    `;
+                barbersGrid.appendChild(card);
+
+                const opt = document.createElement('option');
+                opt.value = b.name;
+                opt.textContent = b.name;
+                bookBarberSelect.appendChild(opt);
+            });
+        }
+        renderBarbers();
+
+        // ============================================================
+        // RENDER PRICE LIST — a clean, quick-glance table version of
+        // the same services data, easy to screenshot and send.
+        // ============================================================
+        function renderPricelist() {
+            const table = document.getElementById('pricelistTable');
+            if (!table) return;
+            table.innerHTML = '';
+            getServicesData().forEach((s) => {
+                const row = document.createElement('div');
+                row.className = 'pricelist-row';
+                row.innerHTML = `
+                        <div class="pl-name"><i class="${s.icon}"></i> ${s.name}</div>
+                        <div class="pl-meta">
+                            <span class="pl-time"><i class="fas fa-clock"></i> ${s.time}</span>
+                            <span class="pl-price">${formatPrice(s.price, baseCurrency, visitorCurrency)}</span>
+                        </div>
+                    `;
+                table.appendChild(row);
+            });
+        }
+        renderPricelist();
 
         // ============================================================
         // SERVICE / BARBER → BOOKING
@@ -3265,64 +3533,112 @@
         function renderGallery() {
             const track1 = document.getElementById('galleryTrack1');
             const track2 = document.getElementById('galleryTrack2');
-
             if (!track1 || !track2) return;
 
-            track1.innerHTML = '';
-            track2.innerHTML = '';
+            function buildFrom(images) {
+                track1.innerHTML = '';
+                track2.innerHTML = '';
+                if (!images || !images.length) return false;
 
-            const dupCount = 3;
-            let allItems = [];
+                // A client with only 2-3 real photos would otherwise
+                // produce a short, sparse-looking track. Repeat the
+                // available photos enough times so the carousel always
+                // reads as a full, continuous strip — never an empty
+                // or half-filled row.
+                const dupCount = Math.max(3, Math.ceil(14 / images.length));
+                let allItems = [];
 
-            for (let d = 0; d < dupCount; d++) {
-                galleryImages.forEach((src) => {
-                    const card = document.createElement('div');
-                    card.className = 'gallery-card';
-                    card.dataset.src = src;
-                    card.innerHTML = `
-                            <img src="${src}" alt="${businessName}" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.gallery-card').classList.add('img-failed'); this.remove();" />
-                            <div class="card-overlay">
-                                <span>✦ ${businessName}</span>
-                                <i class="fas fa-expand"></i>
-                            </div>
-                        `;
-                    allItems.push(card);
-                });
-            }
-
-            // Shuffle for variety
-            allItems = allItems.sort(() => Math.random() - 0.5);
-
-            allItems.forEach((el, i) => {
-                if (i % 2 === 0) {
-                    track1.appendChild(el.cloneNode(true));
-                } else {
-                    track2.appendChild(el.cloneNode(true));
+                for (let d = 0; d < dupCount; d++) {
+                    images.forEach((src) => {
+                        const card = document.createElement('div');
+                        card.className = 'gallery-card';
+                        card.dataset.src = src;
+                        card.innerHTML = `
+                                <img src="${src}" alt="${businessName}" loading="lazy" referrerpolicy="no-referrer" onerror="this.closest('.gallery-card') && this.closest('.gallery-card').remove();" />
+                                <div class="card-overlay">
+                                    <span>✦ ${businessName}</span>
+                                    <i class="fas fa-expand"></i>
+                                </div>
+                            `;
+                        allItems.push(card);
+                    });
                 }
-            });
 
-            // Duplicate the actual cards (flat) so the track is an exact
-            // doubled sequence — this is what the CSS marquee animation
-            // (translateX(-50%)) needs to loop seamlessly. Previously this
-            // wrapped the whole track inside itself as a single nested
-            // element, which broke the 50% loop math and left a long
-            // empty gap once the animation reached the wrapped portion.
-            function duplicateFlat(track) {
-                const originalCards = Array.from(track.children);
-                originalCards.forEach((card) => track.appendChild(card.cloneNode(true)));
-            }
-            duplicateFlat(track1);
-            duplicateFlat(track2);
+                // Shuffle for variety
+                allItems = allItems.sort(() => Math.random() - 0.5);
 
-            // Event delegation for lightbox clicks — cloneNode() does not
-            // copy JS listeners, so we attach one listener per track
-            // instead of one per card (also survives the duplication above).
-            [track1, track2].forEach((track) => {
-                track.addEventListener('click', (e) => {
-                    const card = e.target.closest('.gallery-card');
-                    if (card && card.dataset.src && !card.classList.contains('img-failed')) openLightbox(card.dataset.src);
+                allItems.forEach((el, i) => {
+                    if (i % 2 === 0) {
+                        track1.appendChild(el.cloneNode(true));
+                    } else {
+                        track2.appendChild(el.cloneNode(true));
+                    }
                 });
-            });
+
+                // Duplicate the actual cards (flat) so the track is an exact
+                // doubled sequence — this is what the CSS marquee animation
+                // (translateX(-50%)) needs to loop seamlessly. Wrapping the
+                // whole track inside itself as a single nested element
+                // breaks the 50% loop math and leaves a long empty gap
+                // once the animation reaches the wrapped portion. Because
+                // the onerror above is an inline HTML attribute (not an
+                // addEventListener), it survives cloneNode() too.
+                function duplicateFlat(track) {
+                    const originalCards = Array.from(track.children);
+                    originalCards.forEach((card) => track.appendChild(card.cloneNode(true)));
+                }
+                duplicateFlat(track1);
+                duplicateFlat(track2);
+
+                // Event delegation for lightbox clicks — cloneNode() does not
+                // copy JS listeners, so we attach one listener per track
+                // instead of one per card (also survives the duplication above).
+                const supportsHoverGallery = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+                [track1, track2].forEach((track) => {
+                    track.addEventListener('click', (e) => {
+                        const card = e.target.closest('.gallery-card');
+                        if (card && card.dataset.src) openLightbox(card.dataset.src);
+                    });
+                    if (supportsHoverGallery) {
+                        track.addEventListener('mouseenter', () => track.classList.add('js-paused'));
+                        track.addEventListener('mouseleave', () => track.classList.remove('js-paused'));
+                    }
+                    // Touch: tap pauses the marquee briefly so the visitor
+                    // can look at that frame before it keeps scrolling —
+                    // opening the lightbox (above) gives the fully clear view.
+                    track.addEventListener('touchstart', () => {
+                        track.classList.add('js-paused');
+                        clearTimeout(track._resumeTimer);
+                        track._resumeTimer = setTimeout(() => track.classList.remove('js-paused'), 2500);
+                    }, { passive: true });
+                });
+
+                return true;
+            }
+
+            const built = buildFrom(galleryImages);
+            if (built) {
+                // Right after building, count how many cards we *meant*
+                // to show (before any onerror has had a chance to fire —
+                // image loads are async, so this snapshot is the true
+                // "expected" total).
+                const expectedTotal = track1.children.length + track2.children.length;
+                // Safety net: real scraped Google Photos links sometimes
+                // expire or get blocked, which silently removes those
+                // cards one by one. Previously this was only checked
+                // after 4s and only triggered a fallback when EVERY
+                // photo had failed — leaving a sparse, mostly-empty
+                // looking carousel (a few surviving cards with huge gaps)
+                // visible the whole time otherwise. Checking sooner and
+                // reacting to "too sparse", not just "fully empty",
+                // fixes that.
+                setTimeout(() => {
+                    const survivingTotal = track1.children.length + track2.children.length;
+                    if (survivingTotal < Math.max(6, expectedTotal * 0.4)) {
+                        buildFrom(DEFAULT_GALLERY);
+                    }
+                }, 1800);
+            }
         }
 
         renderGallery();
@@ -3395,7 +3711,7 @@
             let allItems = [];
 
             for (let d = 0; d < dupCount; d++) {
-                testiData.forEach((t) => {
+                getTestiData().forEach((t) => {
                     const card = document.createElement('div');
                     card.className = 'testi-card-scroll';
                     const stars = '★'.repeat(t.stars) + '☆'.repeat(5 - t.stars);
@@ -3404,7 +3720,7 @@
                     ).join('');
                     card.innerHTML = `
                             <div class="google-badge">
-                                <span class="google-icon"><i class="fab fa-google"></i> Google</span>
+                                <span class="google-icon"><i class="fab fa-google"></i> <i class="fas fa-map-marker-alt"></i> Google Maps</span>
                                 <span style="font-weight:300;color:var(--text-soft);font-size:0.65rem;">|</span>
                                 <span class="g-stars">${starsDisplay}</span>
                             </div>
@@ -3434,9 +3750,16 @@
             duplicateFlatTesti(track1);
             duplicateFlatTesti(track2);
 
+            const supportsHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
             document.querySelectorAll('.testi-scroll-track').forEach(t => {
-                t.addEventListener('mouseenter', () => t.classList.add('paused'));
-                t.addEventListener('mouseleave', () => t.classList.remove('paused'));
+                if (supportsHover) {
+                    t.addEventListener('mouseenter', () => t.classList.add('paused'));
+                    t.addEventListener('mouseleave', () => t.classList.remove('paused'));
+                } else {
+                    // Touch devices: tap a review to pause and read it
+                    // clearly; tap again (or elsewhere) to resume.
+                    t.addEventListener('touchstart', () => t.classList.add('paused'), { passive: true });
+                }
                 t.addEventListener('click', () => {
                     t.classList.toggle('paused');
                 });
@@ -3444,6 +3767,154 @@
         }
 
         renderTestimonials();
+
+        // ============================================================
+        // LANGUAGE TOGGLE (AR / EN)
+        // Translates all static UI chrome + re-renders the dynamic
+        // sections (services, barbers, reviews, price list) in the
+        // selected language. Real scraped client data (business name,
+        // address, photos) always stays exactly as scraped — only the
+        // surrounding site text switches.
+        // ============================================================
+        const TRANSLATIONS = {
+            navHome: { ar: 'الرئيسية', en: 'Home' },
+            navServices: { ar: 'خدمات', en: 'Services' },
+            navBarbers: { ar: 'حلاقون', en: 'Barbers' },
+            navGallery: { ar: 'معرض', en: 'Gallery' },
+            navPricelist: { ar: 'الأسعار', en: 'Prices' },
+            navBooking: { ar: 'حجز', en: 'Booking' },
+            navTestimonials: { ar: 'آراء', en: 'Reviews' },
+            navContact: { ar: 'اتصال', en: 'Contact' },
+            heroSub: { ar: 'قصات شعر احترافية، تصفيف لحى، واسترخاء في أجواء عصرية راقية مصممة للرجل العصري الذي يقدر الأناقة والثقة.', en: 'Professional haircuts, beard styling, and relaxation in a modern, upscale atmosphere designed for the man who values style and confidence.' },
+            heroBookBtn: { ar: 'احجز موعدك', en: 'Book Now' },
+            heroWaBtn: { ar: 'واتساب', en: 'WhatsApp' },
+            servicesSub: { ar: 'نقدم لكم أفضل خدمات الحلاقة والعناية في أجواء عصرية هادئة', en: 'We offer the best haircut and grooming services in a calm, modern setting' },
+            barbersSub: { ar: 'اختر الحلاق المفضل لديك واحجز معه مباشرة', en: 'Pick your favorite barber and book with them directly' },
+            pricelistSub: { ar: 'أسعار واضحة وثابتة لكل خدماتنا', en: 'Clear, fixed prices for every service we offer' },
+            gallerySub: { ar: 'اكتشف أجواء الصالون وجودة خدماتنا – مرر أو المس الصورة لتكبيرها', en: 'Explore the salon and the quality of our work — touch or click any photo to view it clearly' },
+            bookingSub: { ar: 'املأ البيانات وسنقوم بتأكيد حجزك فوراً', en: "Fill in your details and we'll confirm your booking right away" },
+            bookSubmitBtn: { ar: 'تأكيد الحجز', en: 'Confirm Booking' },
+            socialSub: { ar: 'انضم لمجتمعنا وشاهد أحدث أعمالنا', en: 'Join our community and see our latest work' },
+            socialIgTitle: { ar: 'انستغرام', en: 'Instagram' },
+            socialIgSub: { ar: 'شاهد أعمالنا اليومية', en: 'See our daily work' },
+            socialTtTitle: { ar: 'تيك توك', en: 'TikTok' },
+            socialTtSub: { ar: 'مقاطع قصيرة ممتعة', en: 'Fun short clips' },
+            socialWaTitle: { ar: 'واتساب', en: 'WhatsApp' },
+            socialWaSub: { ar: 'تواصل معنا مباشرة', en: 'Message us directly' },
+            aboutText: { ar: 'تجربة حلاقة راقية في أجواء عصرية فاخرة مصممة للرجل العصري الذي يقدر الأناقة والثقة والاسترخاء. نقدم خدمات احترافية بأحدث التقنيات وأفضل المنتجات العالمية.', en: 'An elegant grooming experience in a modern, luxurious setting designed for the man who values style, confidence, and relaxation. We offer professional services using the latest techniques and the best products.' },
+            aboutStat1: { ar: 'سنوات خبرة', en: 'Years of Experience' },
+            aboutStat2: { ar: 'عميل سعيد', en: 'Happy Clients' },
+            aboutStat3: { ar: 'حلاقين محترفين', en: 'Professional Barbers' },
+            contactInfoSub: { ar: 'يمكنك التواصل معنا عبر القنوات التالية', en: 'You can reach us through the following channels' },
+            contactWaBtn: { ar: 'واتساب', en: 'WhatsApp' },
+            contactIgBtn: { ar: 'انستغرام', en: 'Instagram' },
+            footerLinksTitle: { ar: 'روابط سريعة', en: 'Quick Links' },
+            footerLinkServices: { ar: 'خدمات', en: 'Services' },
+            footerLinkBarbers: { ar: 'حلاقون', en: 'Barbers' },
+            footerLinkGallery: { ar: 'معرض', en: 'Gallery' },
+            footerLinkPricelist: { ar: 'الأسعار', en: 'Prices' },
+            footerLinkBooking: { ar: 'حجز', en: 'Booking' },
+            footerLinkContact: { ar: 'اتصال', en: 'Contact' },
+            footerSocialTitle: { ar: 'تابعنا', en: 'Follow Us' },
+            footerLinkIg: { ar: 'انستغرام', en: 'Instagram' },
+            footerLinkTt: { ar: 'تيك توك', en: 'TikTok' },
+            footerLinkWa: { ar: 'واتساب', en: 'WhatsApp' },
+            modalTitle: { ar: 'تم الحجز بنجاح!', en: 'Booking Confirmed!' },
+            modalText: { ar: 'سيتم إرسال تفاصيل الحجز إلى رقم الجوال الذي أدخلته.', en: "Your booking details will be sent to the phone number you entered." },
+            modalClose: { ar: 'حسناً', en: 'OK' },
+            loaderText: { ar: 'جاري التحميل...', en: 'Loading...' },
+            aboutTitlePrefix: { ar: 'حول', en: 'About' },
+        };
+        // Composite headings that mix plain text with an accent <span>
+        // and never contain any *dynamic* data — safe to fully replace.
+        const TRANSLATIONS_HTML = {
+            heroTitle: { ar: 'تجربة <span class="highlight">حلاقة فاخرة</span>', en: 'A <span class="highlight">Premium Grooming</span> Experience' },
+            servicesTitle: { ar: 'خدماتنا <span class="text-accent">الفاخرة</span>', en: 'Our <span class="text-accent">Premium</span> Services' },
+            barbersTitle: { ar: 'حلاقون <span class="text-accent">محترفون</span>', en: 'Our <span class="text-accent">Professional</span> Barbers' },
+            pricelistTitle: { ar: 'قائمة <span class="text-accent">الأسعار</span>', en: '<span class="text-accent">Price</span> List' },
+            galleryTitle: { ar: 'معرض <span class="text-accent">الصور</span>', en: 'Photo <span class="text-accent">Gallery</span>' },
+            socialTitle: { ar: 'تابعنا <span class="text-accent">على السوشيال</span>', en: 'Follow Us <span class="text-accent">on Social</span>' },
+            testiTitle: { ar: 'آراء <span class="text-accent">العملاء</span>', en: 'Client <span class="text-accent">Reviews</span>' },
+            contactTitle: { ar: 'اتصل <span class="text-accent">بنا</span>', en: '<span class="text-accent">Contact</span> Us' },
+            contactSub: { ar: 'نحن هنا لخدمتك — تواصل معنا بأي وقت', en: "We're here for you — reach out any time" },
+            contactInfoTitle: { ar: 'معلومات <span class="text-accent">التواصل</span>', en: '<span class="text-accent">Contact</span> Info' },
+            bookingTitle: { ar: 'احجز <span class="text-accent">موعدك</span>', en: 'Book <span class="text-accent">Your Visit</span>' },
+        };
+        // Form field labels: text lives inside a <span> next to an icon
+        const FORM_LABELS = {
+            lblService: { ar: 'الخدمة', en: 'Service' },
+            lblBarber: { ar: 'الحلاق', en: 'Barber' },
+            lblDate: { ar: 'التاريخ', en: 'Date' },
+            lblTime: { ar: 'الوقت', en: 'Time' },
+            lblName: { ar: 'الاسم', en: 'Name' },
+            lblPhone: { ar: 'الجوال', en: 'Phone' },
+        };
+        const PLACEHOLDERS = {
+            bookName: { ar: 'أدخل اسمك', en: 'Enter your name' },
+        };
+
+        function applyLanguage(lang) {
+            currentLang = lang;
+            try { localStorage.setItem('siteLang', lang); } catch (e) { /* ignore */ }
+
+            document.documentElement.lang = lang;
+            document.documentElement.dir = lang === 'en' ? 'ltr' : 'rtl';
+
+            Object.keys(TRANSLATIONS).forEach((id) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = TRANSLATIONS[id][lang];
+            });
+            Object.keys(TRANSLATIONS_HTML).forEach((id) => {
+                const el = document.getElementById(id);
+                if (el) el.innerHTML = TRANSLATIONS_HTML[id][lang];
+            });
+            Object.keys(FORM_LABELS).forEach((id) => {
+                const el = document.getElementById(id);
+                const span = el && el.querySelector('span');
+                if (span) span.textContent = FORM_LABELS[id][lang];
+            });
+            Object.keys(PLACEHOLDERS).forEach((id) => {
+                const el = document.getElementById(id);
+                if (el) el.placeholder = PLACEHOLDERS[id][lang];
+            });
+
+            const langToggleBtn = document.getElementById('langToggle');
+            const langToggleMobileBtn = document.getElementById('langToggleMobile');
+            const nextLabel = lang === 'en' ? 'AR' : 'EN';
+            if (langToggleBtn) langToggleBtn.textContent = nextLabel;
+            if (langToggleMobileBtn) langToggleMobileBtn.textContent = nextLabel;
+
+            document.title = `${businessName} | ${lang === 'en' ? 'Premium Grooming Experience' : 'تجربة حلاقة فاخرة'}`;
+            if (testiSubEl) {
+                testiSubEl.textContent = lang === 'en'
+                    ? `What our clients say about their experience at ${businessName}`
+                    : `ما يقوله عملاؤنا عن تجربتهم في ${businessName}`;
+            }
+
+            // Re-render everything that depends on language-specific data.
+            renderServices();
+            renderBarbers();
+            renderPricelist();
+            renderTestimonials();
+        }
+
+        const langToggleBtn = document.getElementById('langToggle');
+        if (langToggleBtn) {
+            langToggleBtn.addEventListener('click', () => {
+                applyLanguage(currentLang === 'en' ? 'ar' : 'en');
+            });
+        }
+        const langToggleMobileBtn = document.getElementById('langToggleMobile');
+        if (langToggleMobileBtn) {
+            langToggleMobileBtn.addEventListener('click', () => {
+                applyLanguage(currentLang === 'en' ? 'ar' : 'en');
+                const navLinksEl = document.getElementById('navLinks');
+                if (navLinksEl) navLinksEl.classList.remove('open');
+            });
+        }
+        // Apply the saved (or default) language once before revealing the
+        // page, so a returning EN visitor never sees a flash of Arabic.
+        applyLanguage(currentLang);
 
         // All real client data is now on the page — safe to reveal it.
         hideLoaderAndReveal();
